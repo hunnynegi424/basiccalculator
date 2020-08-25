@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+</head>
+<body>
+    <div class="container">
+        <textarea id="c-textarea-field" type="text" disabled placeholder="Calculator"></textarea>
+        <div id="numeric-keypad"></div>
+        <div id="button-group"></div>
+        <button id="clear-button" onClick="clearInputs()">Clear</button>
+    </div>
+</body>
+<style>
+
+    body {
+        width: 400px;
+        border: 0px solid black;
+        box-shadow: 5px 5px 5px black;
+    }
+    .container {
+        padding: 10px;
+        background-color: grey;
+    }
+    #c-textarea-field {
+        width: 98%;
+        font-size: 40px;
+        height: 100px;
+        text-align: end;
+        margin-bottom: 10px;
+        resize: none;
+    }
+    #numeric-button, #add, #subtract, #multiply, #divide, #result{
+        width: 74px;
+        height: 74px;
+        margin: 1px;
+        font-size: 20px;
+        border: none;
+        border-radius: 50%;
+        outline: none;
+    }
+
+    #numeric-button:hover {
+        background-color: aqua;
+    }
+    #add:hover, #subtract:hover, #multiply:hover, #divide:hover, #result:hover {
+        background-color: aquamarine;        
+    }
+    #clear-button {
+        margin-top: 5px;
+        font-size: 20px;
+        border: none;
+        width: 380px;
+        height: 70px;
+        border-radius: 5px;
+        outline: none;
+    }
+    #clear-button:hover {
+        background-color: brown;
+        color: white
+    }
+</style>
+<script>
+    // clear the input screen
+    function clearInputs() {
+        document.getElementById("c-textarea-field").innerHTML = ""
+    }
+
+    // get the input
+    function getNumericInput(a) {
+            document.getElementById("c-textarea-field").innerHTML += ""+a;
+    }
+
+    // implementing arithmatic operation
+    function getArithmaticOperatorInput(a) {
+        var value = document.getElementById("c-textarea-field").innerHTML;
+        var sign = "";
+        switch(a) {
+            case 1:
+                sign = "+";
+                break;
+            case 2:
+                sign = "-";
+                break;
+            case 3:
+                sign = "*";
+                break;
+            case 4:
+                sign = "/";
+                break;
+            case 5:
+                sign = "=";
+                break;
+        }
+        if(value) {
+            document.getElementById("c-textarea-field").innerHTML += " "+sign+ " ";
+            if(a === 5) { // calculating and printing the result on clicking "=" sign
+                var inputs = document.getElementById("c-textarea-field").innerHTML;
+                const splitted = inputs.match(/\d+/g); // getting the numbers out
+                const splitting = inputs.split(""); // to check the arithmatic operator in the input
+                const arithmaticIndex = splitting.findIndex(f=> (
+                    f ==='+' ||
+                    f === '-' ||
+                    f === '*' ||
+                    f === '/'
+                ));
+                const firstNumber = +splitted[0];
+                const secondNumber = +splitted[1];
+                const expression = splitting[arithmaticIndex];
+                // calculting results
+                var results="";
+                switch(expression) {
+                    case '+':
+                        results = firstNumber + secondNumber;
+                        break;
+                    case '-':
+                        results = firstNumber - secondNumber;
+                        break;
+                    case '*':
+                        results = firstNumber * secondNumber;
+                        break;
+                    case '/':
+                        results = firstNumber / secondNumber;
+                        break;
+                }
+                document.getElementById("c-textarea-field").innerHTML += ""+results;
+            }
+        }
+    }
+
+    // creating numeric buttons
+    for(i=0; i<=9; i++){
+        document.getElementById("numeric-keypad").innerHTML +=
+            "<button id='numeric-button' onClick='getNumericInput("+i+")'>"+i+"</button>" 
+    }
+    // creating arithmatic expressions buttons
+    [
+        {name: "add", display: "+", value: 1},
+        {name: "subtract", display: "-", value: 2},
+        {name: "multiply", display: "*", value: 3},
+        {name: "divide", display: "/", value: 4},
+        {name: "result", display: "=", value: 5},
+    ].forEach(({name, display, value})=> {
+        document.getElementById("button-group").innerHTML +=
+            "<button id="+name+" title="+name+" onClick='getArithmaticOperatorInput("+value+")'>"+display+"</button>" 
+    });
+</script>
+</html>
